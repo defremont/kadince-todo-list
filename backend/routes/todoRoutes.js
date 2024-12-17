@@ -10,7 +10,10 @@ router.get("/", async (req, res) => {
 
 // Create a new todo
 router.post("/", async (req, res) => {
-    const todo = await Todo.create({ task: req.body.task });
+    const todo = await Todo.create({
+        task: req.body.task,
+        dueDate: req.body.dueDate,
+    });
     res.json(todo);
 });
 
@@ -18,8 +21,7 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
     const todo = await Todo.findByIdAndUpdate(
         req.params.id,
-        req.body,
-        { new: true }
+        { dueDate: req.body.dueDate, task: req.body.task, isCompleted: req.body.isCompleted },
     );
     res.json(todo);
 });
@@ -29,5 +31,4 @@ router.delete("/:id", async (req, res) => {
     await Todo.findByIdAndDelete(req.params.id);
     res.json({ message: "Todo Deleted" });
 });
-
 module.exports = router;
