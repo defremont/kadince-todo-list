@@ -33,7 +33,7 @@ const App = () => {
     <>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6">MERN Todo App</Typography>
+          <Typography variant="h6">Kadince TODO</Typography>
         </Toolbar>
       </AppBar>
       <Container maxWidth="sm">

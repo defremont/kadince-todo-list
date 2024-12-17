@@ -1,4 +1,4 @@
-# MERN Todo App
+# Kadince TODO
 
 This is a full-stack Todo App built with the MERN stack (MongoDB, Express, React, Node.js). The backend provides a RESTful API, and the frontend allows users to create, read, update, and delete tasks.
 
@@ -9,18 +9,7 @@ This is a full-stack Todo App built with the MERN stack (MongoDB, Express, React
 
 ---
 
-## Setup Instructions
-
-### Step 1: Clone the Repository
-
-```bash
-git clone https://github.com/your-repository/mern-todo-app.git
-cd mern-todo-app
-```
-
----
-
-### Step 2: Set Up MongoDB Using Docker
+### Step 1: Set Up MongoDB Using Docker
 
 Run the following command to create and start a MongoDB instance using Docker:
 
@@ -44,7 +33,7 @@ After running the command, MongoDB will be accessible at `mongodb://localhost:27
 
 ---
 
-### Step 3: Set Up the Backend
+### Step 2: Set Up the Backend
 
 1. Navigate to the backend directory:
 
@@ -75,7 +64,7 @@ The backend will run on `http://localhost:5000`.
 
 ---
 
-### Step 4: Set Up the Frontend
+### Step 3: Set Up the Frontend
 
 1. Navigate to the frontend directory:
 
