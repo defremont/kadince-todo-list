@@ -18,13 +18,13 @@ const TodoList = ({ todos, fetchTodos, filter }) => {
     const [editTask, setEditTask] = useState("");
 
     const deleteTodo = async (id) => {
-        await axios.delete(`http://localhost:5000/api/todos/${id}`);
+        await axios.delete(process.env.REACT_APP_API_URL + `/api/todos/${id}`);
         fetchTodos();
     };
 
     const toggleComplete = async (todo) => {
         console.log("tooggle");
-        await axios.put(`http://localhost:5000/api/todos/${todo._id}`, {
+        await axios.put(process.env.REACT_APP_API_URL + `/api/todos/${todo._id}`, {
             isCompleted: !todo.isCompleted,
         });
         fetchTodos();
@@ -36,7 +36,7 @@ const TodoList = ({ todos, fetchTodos, filter }) => {
     };
 
     const saveEdit = async (id) => {
-        await axios.put(`http://localhost:5000/api/todos/${id}`, { task: editTask });
+        await axios.put(process.env.REACT_APP_API_URL + `/api/todos/${id}`, { task: editTask });
         setEditingId(null);
         setEditTask("");
         fetchTodos();

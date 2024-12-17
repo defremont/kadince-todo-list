@@ -11,7 +11,7 @@ const TodoForm = ({ fetchTodos }) => {
     const addTodo = async (e) => {
         e.preventDefault();
         // Call backend to create a new task (ensure `dueDate` is sent correctly)
-        await axios.post("http://localhost:5000/api/todos", { task, dueDate });
+        await axios.post(process.env.REACT_APP_API_URL + "/api/todos", { task, dueDate });
         fetchTodos();
         setTask("");
         setDueDate(null);
