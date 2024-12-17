@@ -17,7 +17,7 @@ const App = () => {
   const [filter, setFilter] = useState("all");
 
   const fetchTodos = async () => {
-    const { data } = await axios.get("http://localhost:5000/api/todos");
+    const { data } = await axios.get(process.env.REACT_APP_API_URL + "/api/todos");
     setTodos(data);
   };
 
@@ -41,7 +41,6 @@ const App = () => {
           <Typography variant="h4" align="center" gutterBottom>
             Todo List
           </Typography>
-
           {/* Filter */}
           <ToggleButtonGroup
             value={filter}
