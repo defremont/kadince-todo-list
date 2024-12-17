@@ -121,6 +121,7 @@ The frontend will run on `http://localhost:3000`.
 ## Notes
 
 - Make sure to replace the `MONGO_URI` in the `.env` file with your MongoDB connection string if using a custom setup.
+- In the client `.env` file, set `REACT_APP_API_URL` to `http://localhost:5000` if running the backend locally.
 - If you encounter issues, check that Docker is running and MongoDB is accessible.
 
 ---
