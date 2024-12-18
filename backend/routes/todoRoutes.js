@@ -4,9 +4,27 @@ const router = express.Router();
 
 // Get all todos
 router.get("/", async (req, res) => {
-    const todos = await Todo.find();
-    res.json(todos);
+    try {
+        const page = parseInt(req.query.page) || 1; // Default to page 1
+        const limit = parseInt(req.query.limit) || 5; // Default to 5 items per page
+        const skip = (page - 1) * limit;
+        const sortBy = req.query.sortBy || "createdAt"; // Default sorting field
+        const todoQueryFilter = req.query.filter === "all" ? {} : { isCompleted: req.query.filter === "complete" } || { isCompleted: req.query.filter === "pending" };
+        const todos = await Todo.find(todoQueryFilter).sort({ [sortBy]: sortBy === "priority" ? 1 : -1 }).skip(skip).limit(limit);
+        const count = await Todo.find(todoQueryFilter)
+        const total = await count.length;
+
+        res.json({
+            todos,
+            total,
+            totalPages: Math.ceil(total / limit),
+            currentPage: page,
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch todos" });
+    }
 });
+
 
 // Create a new todo
 router.post("/", async (req, res) => {

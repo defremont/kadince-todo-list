@@ -23,7 +23,6 @@ const TodoList = ({ todos, fetchTodos, filter }) => {
     };
 
     const toggleComplete = async (todo) => {
-        console.log("tooggle");
         await axios.put(process.env.REACT_APP_API_URL + `/api/todos/${todo._id}`, {
             isCompleted: !todo.isCompleted,
         });
@@ -42,16 +41,9 @@ const TodoList = ({ todos, fetchTodos, filter }) => {
         fetchTodos();
     };
 
-    const filteredTodos = todos.filter((todo) => {
-        if (filter === "all") return true;
-        if (filter === "pending") return !todo.isCompleted;
-        if (filter === "complete") return todo.isCompleted;
-        return true;
-    });
-
     return (
         <List>
-            {filteredTodos.map((todo) => (
+            {todos.map((todo) => (
                 <ListItem key={todo._id} divider>
                     <Checkbox
                         edge="start"
