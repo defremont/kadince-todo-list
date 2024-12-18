@@ -31,6 +31,7 @@ router.post("/", async (req, res) => {
     const todo = await Todo.create({
         task: req.body.task,
         dueDate: req.body.dueDate,
+        priority: req.body.priority,
     });
     res.json(todo);
 });

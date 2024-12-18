@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import {
   Container,
@@ -24,18 +24,19 @@ const App = () => {
   const [limit, setLimit] = useState(5); // Items per page
   const [sortBy, setSortBy] = useState("createdAt");
 
-  useEffect(() => {
-    fetchTodos();
-  }, [page, limit, sortBy, filter]);
-
-  const fetchTodos = async () => {
+  const fetchTodos = useCallback(async () => {
     const { data } = await axios.get(
-      process.env.REACT_APP_API_URL + `/api/todos?page=${page}&limit=${limit}&sortBy=${sortBy}&filter=${filter}`
+      process.env.REACT_APP_API_URL +
+      `/api/todos?page=${page}&limit=${limit}&sortBy=${sortBy}&filter=${filter}`
     );
     setTodos(data.todos);
     setTotalPages(data.totalPages);
     setTotalTodos(data.total);
-  };
+  }, [page, limit, sortBy, filter]);
+
+  useEffect(() => {
+    fetchTodos();
+  }, [fetchTodos]);
 
   const handleSortChange = (event) => {
     setSortBy(event.target.value);
@@ -65,7 +66,7 @@ const App = () => {
       <Container maxWidth="sm">
         <Box my={4}>
           <Typography variant="h4" align="center" gutterBottom>
-            Todo List ({totalTodos})
+            Todo List
           </Typography>
           {/* Filter */}
           <ToggleButtonGroup
@@ -75,23 +76,15 @@ const App = () => {
             fullWidth
             style={{ marginBottom: "10px" }} // Add this line
           >
-            <ToggleButton value="all">All</ToggleButton>
-            <ToggleButton value="pending">Pending</ToggleButton>
-            <ToggleButton value="complete">Complete</ToggleButton>
+            <ToggleButton value="all">All {filter === "all" ? "("+totalTodos+")" : ""}</ToggleButton>
+            <ToggleButton value="pending">Pending {filter === "pending" ? "(" + totalTodos + ")" : ""}</ToggleButton>
+            <ToggleButton value="complete">Complete {filter === "complete" ? "(" + totalTodos + ")" : ""}</ToggleButton>
           </ToggleButtonGroup>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-            <Typography variant="body1">Sort by:</Typography>
-            <select value={sortBy} onChange={handleSortChange}>
-              <option value="createdAt">Creation Date</option>
-              <option value="priority">Priority</option>
-              <option value="dueDate">Due Date</option>
-            </select>
-          </Box>
           {/* Add and List Todos */}
           <TodoForm fetchTodos={fetchTodos} />
           {/* Pagination */}
           <Box display="flex" justifyContent="center" mt={2}>
-            <Pagination
+            <Pagination 
               count={totalPages}
               page={page}
               onChange={handlePageChange}
@@ -99,12 +92,18 @@ const App = () => {
             />
 
           </Box>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Box display="flex" justifyContent="center" gap={3} alignItems="center" mb={2} mt={2}>
             <Typography variant="body1">Tasks per page:</Typography>
-            <Select value={limit} onChange={handleLimitChange}>
+            <Select size="small" value={limit} onChange={handleLimitChange}>
               <MenuItem value={5}>5</MenuItem>
               <MenuItem value={10}>10</MenuItem >
               <MenuItem value={20}>20</MenuItem >
+            </Select>
+            <Typography variant="body1">Sort by:</Typography>
+            <Select size="small" value={sortBy} onChange={handleSortChange}>
+              <MenuItem value="createdAt">Creation Date</MenuItem>
+              <MenuItem value="priority">Priority</MenuItem>
+              <MenuItem value="dueDate">Due Date</MenuItem>
             </Select>
           </Box>
           <TodoList todos={todos} fetchTodos={fetchTodos} />

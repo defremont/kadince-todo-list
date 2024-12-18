@@ -61,7 +61,7 @@ const TodoList = ({ todos, fetchTodos, filter }) => {
                     ) : (
                         <ListItemText
                             primary={todo.task}
-                            secondary={todo.dueDate ? `Due: ${new Date(todo.dueDate).toLocaleDateString()}` : ""}
+                            secondary={todo.dueDate ? `Priority: ${todo.priority} | Due: ${new Date(todo.dueDate).toLocaleDateString()}` : `Priority: ${todo.priority}`}
                             style={{
                                 textDecoration: todo.isCompleted
                                     ? "line-through"
