@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
         const skip = (page - 1) * limit;
         const sortBy = req.query.sortBy || "createdAt"; // Default sorting field
         const todoQueryFilter = req.query.filter === "all" ? {} : { isCompleted: req.query.filter === "complete" } || { isCompleted: req.query.filter === "pending" };
-        const todos = await Todo.find(todoQueryFilter).sort({ [sortBy]: sortBy === "priority" ? 1 : -1 }).skip(skip).limit(limit);
+        const todos = await Todo.find(todoQueryFilter).sort({ [sortBy]: -1 }).skip(skip).limit(limit);
         const count = await Todo.find(todoQueryFilter)
         const total = await count.length;
 

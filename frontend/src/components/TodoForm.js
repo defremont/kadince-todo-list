@@ -4,16 +4,14 @@ import { TextField, Button, Box, Select, MenuItem, InputLabel, FormControl } fro
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
-const TodoForm = ({ fetchTodos }) => {
+const TodoForm = ({ fetchTodos, loading, setLoading }) => {
     const [task, setTask] = useState("");
     const [dueDate, setDueDate] = useState(null);
-    const [priority, setPriority] = useState(2);
+    const [priority, setPriority] = useState(1);
 
     const addTodo = async (e) => {
         e.preventDefault();
-        // Call backend to create a new task (ensure `dueDate` is sent correctly)
         await axios.post(process.env.REACT_APP_API_URL + "/api/todos", { task, dueDate, priority });
-        console.log(priority);
         fetchTodos();
         setTask("");
         setDueDate(null);
@@ -54,7 +52,7 @@ const TodoForm = ({ fetchTodos }) => {
             </Box>
             
             <Button variant="contained" color="primary" type="submit">
-                Add
+                Save
             </Button>
         </Box>
     );
