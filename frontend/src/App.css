@@ -33,7 +33,36 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+#listItem:hover {
+  background-color: #dddddd;
+  border-color: #6e6e6e;
+  cursor: pointer;
+}
+
+#listItem {
+  background-color: #F0F0F0;
+  /* box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2); */
+  border: 1px solid #878787;
+  margin: 5px;
+  border-radius: 4px;
+}
+
+#btn-green {
+  font-size: "20px";
+  color: #212529;
+  background-color: #CBE068;
+  border-color: #9EB441;
+  border: 1px solid #878787;
+
+}
+
+#btn-green:hover {
+  color: #212529;
+  background-color: #BAD345;
+  border-color: #9EB441;
 }

@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
         const skip = (page - 1) * limit;
         const sortBy = req.query.sortBy || "createdAt"; // Default sorting field
         const todoQueryFilter = req.query.filter === "all" ? {} : { isCompleted: req.query.filter === "complete" } || { isCompleted: req.query.filter === "pending" };
-        const todos = await Todo.find(todoQueryFilter).sort({ [sortBy]: -1 }).skip(skip).limit(limit);
+        const todos = await Todo.find(todoQueryFilter).sort({ [sortBy]: sortBy === "priority" ? 1 : -1 }).skip(skip).limit(limit);
         const count = await Todo.find(todoQueryFilter)
         const total = await count.length;
 
@@ -32,6 +32,7 @@ router.post("/", async (req, res) => {
         task: req.body.task,
         dueDate: req.body.dueDate,
         priority: req.body.priority,
+        description: req.body.description,
     });
     res.json(todo);
 });
@@ -40,7 +41,7 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
     const todo = await Todo.findByIdAndUpdate(
         req.params.id,
-        { dueDate: req.body.dueDate, task: req.body.task, isCompleted: req.body.isCompleted },
+        { dueDate: req.body.dueDate, task: req.body.task, isCompleted: req.body.isCompleted, description: req.body.description, priority: req.body.priority },
     );
     res.json(todo);
 });

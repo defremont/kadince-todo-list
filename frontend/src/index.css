@@ -3,6 +3,7 @@ body {
   font-weight: normal;
   line-height: 1.5;
   color: #555555;
+  background: linear-gradient(to bottom, #fdf1f1, #ffffff);
 }
 
 code {

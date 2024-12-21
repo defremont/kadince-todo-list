@@ -41,7 +41,7 @@ const App = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalTodos, setTotalTodos] = useState(0);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [sortBy, setSortBy] = useState("createdAt");
   const [loading, setLoading] = useState(false);
   const [newTodoDialog, setNewTodoDialog] = useState(false);
@@ -72,7 +72,6 @@ const App = () => {
 
   const openTodoDialog = () => {
     setNewTodoDialog(true);
-    console.log("openTodoDialog");
   };
 
   const closeTodoDialog = () => {
@@ -110,25 +109,16 @@ const App = () => {
             fullWidth
             style={{ marginBottom: "10px" }}
           >
-            <ToggleButton value="all">
+            <ToggleButton id="listItem"  value="all">
               All {filter === "all" ? "(" + totalTodos + ")" : ""}
             </ToggleButton>
-            <ToggleButton value="pending">
+            <ToggleButton id="listItem" value="pending">
               Pending {filter === "pending" ? "(" + totalTodos + ")" : ""}
             </ToggleButton>
-            <ToggleButton value="complete">
+            <ToggleButton id="listItem" value="complete">
               Complete {filter === "complete" ? "(" + totalTodos + ")" : ""}
             </ToggleButton>
           </ToggleButtonGroup>
-          {/* Pagination */}
-          <Box display="flex" justifyContent="center" mt={2}>
-            <Pagination
-              count={totalPages}
-              page={page}
-              onChange={handlePageChange}
-              color="primary"
-            />
-          </Box>
           <Box
             display="flex"
             justifyContent="center"
@@ -150,6 +140,15 @@ const App = () => {
               <MenuItem value="dueDate">Due Date</MenuItem>
             </Select>
           </Box>
+          {/* Pagination */}
+          <Box display="flex" justifyContent="center" mt={2}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              color="primary"
+            />
+          </Box>
           <TodoList
             todos={todos}
             fetchTodos={fetchTodos}
@@ -167,13 +166,13 @@ const App = () => {
       >
         {loading && <CircularProgress />}
         <IconButton
+        size="large"
+          id="btn-green"
           variant="contained"
           color="primary"
           onClick={openTodoDialog}
         >
-          <Icon color="primary" sx={{ fontSize: 60 }}>
-            add_circle
-          </Icon>
+          <AddIcon />
         </IconButton>
       </Box>
       <Dialog open={newTodoDialog} onClose={closeTodoDialog} fullWidth>
@@ -197,6 +196,7 @@ const App = () => {
             fetchTodos={fetchTodos}
             loading={loading}
             setLoading={setLoading}
+            onClose={closeTodoDialog}
           />
         </DialogContent>
       </Dialog>
