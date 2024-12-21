@@ -3,7 +3,6 @@ import {
     List,
     ListItem,
     ListItemText,
-    ListItemSecondaryAction,
     IconButton,
     Dialog,
     Chip,
@@ -18,7 +17,6 @@ import {
 import axios from "axios";
 import TodoForm from "./TodoForm";
 import CloseIcon from '@mui/icons-material/Close';
-import DeleteIcon from "@mui/icons-material/Delete";
 
 const TodoList = ({ todos, fetchTodos, setLoading, loading }) => {
     const [editTodo, setEditTodo] = useState({
