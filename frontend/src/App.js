@@ -16,6 +16,7 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
+  Link,
 } from "@mui/material";
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
@@ -96,7 +97,7 @@ const App = () => {
           <Typography variant="h6">Kadince TODO</Typography>
         </Toolbar>
       </AppBar>
-      <Container maxWidth="sm">
+      <Container maxWidth="sm" style={{ paddingBottom: "50px" }}>
         <Box my={4}>
           {/* Calendar Section */}
           <Typography variant="h5" align="center" gutterBottom>
@@ -169,6 +170,17 @@ const App = () => {
               />
             </Box>
           )}
+          {totalTodos < 1 && (
+            <Box display="flex" justifyContent="center" mt={2}>
+              <Typography variant="body1" align="center">
+                You don't have any tasks yet. &nbsp;
+                <br />
+                <Link href="#" onClick={openTodoDialog}>
+                  Create your first task
+                </Link>
+              </Typography>
+            </Box>
+          )}
           <TodoList
             todos={todos}
             fetchTodos={fetchTodos}
@@ -184,7 +196,6 @@ const App = () => {
         bottom="20px"
         right="20px"
       >
-        {loading && <CircularProgress />}
         <IconButton
           size="large"
           id="btn-green"
