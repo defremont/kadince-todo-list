@@ -64,7 +64,7 @@ const TodoList = ({ todos, fetchTodos, setLoading, loading }) => {
             </Backdrop>
             <List>
                 {todos.map((todo) => (
-                    <Box display="flex" gap={1}>
+                    <Box display="flex" gap={1} key={todo._id}>
                         <Checkbox
                             edge="start"
                             checked={todo.isCompleted}
