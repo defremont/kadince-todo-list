@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
     TextField,
     Button,
@@ -16,6 +15,7 @@ import {
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import DeleteIcon from "@mui/icons-material/Delete";
+import todoService from "../services/todoService";
 
 const TodoForm = ({ fetchTodos, loading, setLoading, initialValues, onClose }) => {
     const [task, setTask] = useState(initialValues?.task || "");
@@ -34,11 +34,12 @@ const TodoForm = ({ fetchTodos, loading, setLoading, initialValues, onClose }) =
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        onClose();
         setLoading(true);
         try {
             if (initialValues && initialValues._id) {
-                // Update existing task
-                await axios.put(`${process.env.REACT_APP_API_URL}/api/todos/${initialValues._id}`, {
+                // Update existing task                
+                await todoService.updateTodo(initialValues._id, {
                     task,
                     dueDate,
                     priority,
@@ -46,7 +47,7 @@ const TodoForm = ({ fetchTodos, loading, setLoading, initialValues, onClose }) =
                 });
             } else {
                 // Create a new task
-                await axios.post(`${process.env.REACT_APP_API_URL}/api/todos`, {
+                await todoService.createTodo({
                     task,
                     dueDate,
                     priority,
@@ -54,7 +55,6 @@ const TodoForm = ({ fetchTodos, loading, setLoading, initialValues, onClose }) =
                 });
             }
             fetchTodos();
-            onClose();
         } catch (error) {
             console.error("Error saving task:", error);
         } finally {
@@ -64,10 +64,10 @@ const TodoForm = ({ fetchTodos, loading, setLoading, initialValues, onClose }) =
 
     const deleteTodo = async (id) => {
         setLoading(true);
-        await axios.delete(process.env.REACT_APP_API_URL + `/api/todos/${id}`);
+        onClose();
+        await todoService.deleteTodo(id);
         fetchTodos();
         setLoading(false);
-        onClose();
     };
     const handlePriorityChange = (event) => setPriority(event.target.value);
 

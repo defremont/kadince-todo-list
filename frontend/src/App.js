@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
 import {
   Container,
   Typography,
@@ -16,12 +15,14 @@ import {
   IconButton,
   DialogContent,
   DialogTitle,
+  Grid,
 } from "@mui/material";
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
 import "./App.css";
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import todoService from "./services/todoService";
 
 // Function to format the date
 const formatDate = (date) => {
@@ -46,10 +47,7 @@ const App = () => {
 
   const fetchTodos = useCallback(async () => {
     setLoading(true);
-    const { data } = await axios.get(
-      process.env.REACT_APP_API_URL +
-      `/api/todos?page=${page}&limit=${limit}&sortBy=${sortBy}&filter=${filter}`
-    );
+    const { data } = await todoService.getTodos(page, limit, sortBy, filter);
     setTodos(data.todos);
     setTotalPages(data.totalPages);
     setTotalTodos(data.total);
@@ -82,8 +80,13 @@ const App = () => {
   };
 
   const handleFilterChange = (event, newFilter) => {
-    if (newFilter) setFilter(newFilter);
-    setPage(1);
+    if (newFilter) {
+      setFilter(newFilter);
+      if (newFilter === "mixed") {
+        setSortBy("priority");
+      }
+      setPage(1);
+    }
   };
 
   return (
@@ -107,7 +110,7 @@ const App = () => {
             fullWidth
             style={{ marginBottom: "10px" }}
           >
-            <ToggleButton id="listItem"  value="all">
+            <ToggleButton id="listItem" value="all">
               All {filter === "all" ? "(" + totalTodos + ")" : ""}
             </ToggleButton>
             <ToggleButton id="listItem" value="pending">
@@ -117,36 +120,55 @@ const App = () => {
               Complete {filter === "complete" ? "(" + totalTodos + ")" : ""}
             </ToggleButton>
           </ToggleButtonGroup>
-          <Box
-            display="flex"
-            justifyContent="center"
-            gap={3}
-            alignItems="center"
-            mb={2}
-            mt={2}
-          >
-            <Typography variant="body1">Tasks per page:</Typography>
-            <Select size="small" value={limit} onChange={handleLimitChange}>
-              <MenuItem value={5}>5</MenuItem>
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={20}>20</MenuItem>
-            </Select>
-            <Typography variant="body1">Sort by:</Typography>
-            <Select size="small" value={sortBy} onChange={handleSortChange}>
-              <MenuItem value="createdAt">Creation Date</MenuItem>
-              <MenuItem value="priority">Priority</MenuItem>
-              <MenuItem value="dueDate">Due Date</MenuItem>
-            </Select>
+          <Box mt={2} mb={2}>
+            <Grid container spacing={2} alignItems="center" justifyContent="center">
+              <Grid item xs={12} sm="auto">
+                <Typography variant="body1" align="center">
+                  Tasks per page:
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm="auto">
+                <Select
+                  size="small"
+                  value={limit}
+                  onChange={handleLimitChange}
+                  fullWidth
+                >
+                  <MenuItem value={5}>5</MenuItem>
+                  <MenuItem value={10}>10</MenuItem>
+                  <MenuItem value={20}>20</MenuItem>
+                </Select>
+              </Grid>
+              <Grid item xs={12} sm="auto">
+                <Typography variant="body1" align="center">
+                  Sort by:
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm="auto">
+                <Select
+                  size="small"
+                  value={sortBy}
+                  onChange={handleSortChange}
+                  fullWidth
+                >
+                  <MenuItem value="createdAt">Creation Date</MenuItem>
+                  <MenuItem value="priority">Priority</MenuItem>
+                  <MenuItem value="dueDate">Due Date</MenuItem>
+                </Select>
+              </Grid>
+            </Grid>
           </Box>
           {/* Pagination */}
-          <Box display="flex" justifyContent="center" mt={2}>
-            <Pagination
-              count={totalPages}
-              page={page}
-              onChange={handlePageChange}
-              color="primary"
-            />
-          </Box>
+          {totalTodos > 5 && (
+            <Box display="flex" justifyContent="center" mt={2}>
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </Box>
+          )}
           <TodoList
             todos={todos}
             fetchTodos={fetchTodos}
@@ -164,7 +186,7 @@ const App = () => {
       >
         {loading && <CircularProgress />}
         <IconButton
-        size="large"
+          size="large"
           id="btn-green"
           variant="contained"
           color="primary"

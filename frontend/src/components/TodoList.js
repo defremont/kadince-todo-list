@@ -14,9 +14,9 @@ import {
     DialogContent,
     Checkbox,
 } from "@mui/material";
-import axios from "axios";
 import TodoForm from "./TodoForm";
 import CloseIcon from '@mui/icons-material/Close';
+import todoService from "../services/todoService";
 
 const TodoList = ({ todos, fetchTodos, setLoading, loading }) => {
     const [editTodo, setEditTodo] = useState({
@@ -31,7 +31,7 @@ const TodoList = ({ todos, fetchTodos, setLoading, loading }) => {
 
     const toggleComplete = async (todo) => {
         setLoading(true);
-        await axios.put(process.env.REACT_APP_API_URL + `/api/todos/${todo._id}`, {
+        await todoService.updateTodo(todo._id, {
             isCompleted: !todo.isCompleted,
         });
         fetchTodos();
