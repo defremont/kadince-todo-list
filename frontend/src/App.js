@@ -110,13 +110,25 @@ const App = () => {
             fullWidth
             style={{ marginBottom: "10px" }}
           >
-            <ToggleButton id="listItem" value="all">
+            <ToggleButton
+              id="listItem"
+              value="all"
+              style={filter === "all" ? { backgroundColor: "rgb(85, 85, 85)", color: "white" } : null}
+            >
               All {filter === "all" ? "(" + totalTodos + ")" : ""}
             </ToggleButton>
-            <ToggleButton id="listItem" value="pending">
+            <ToggleButton
+              id="listItem"
+              value="pending"
+              style={filter === "pending" ? { backgroundColor: "rgb(85, 85, 85)", color: "white" } : null}
+            >
               Pending {filter === "pending" ? "(" + totalTodos + ")" : ""}
             </ToggleButton>
-            <ToggleButton id="listItem" value="complete">
+            <ToggleButton
+              id="listItem"
+              value="complete"
+              style={filter === "complete" ? { backgroundColor: "rgb(85, 85, 85)", color: "white" } : null}
+            >
               Complete {filter === "complete" ? "(" + totalTodos + ")" : ""}
             </ToggleButton>
           </ToggleButtonGroup>

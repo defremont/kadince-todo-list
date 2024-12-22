@@ -62,9 +62,10 @@ const TodoList = ({ todos, fetchTodos, setLoading, loading }) => {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <List>
+            <List className="list-container">
                 {todos.map((todo) => (
-                    <Box display="flex" gap={1} key={todo._id}>
+                    <Box display="flex" gap={1} key={todo._id}
+                        className="todo-item" >
                         <Checkbox
                             edge="start"
                             checked={todo.isCompleted}
