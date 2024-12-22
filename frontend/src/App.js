@@ -113,21 +113,21 @@ const App = () => {
             <ToggleButton
               id="listItem"
               value="all"
-              style={filter === "all" ? { backgroundColor: "rgb(85, 85, 85)", color: "white" } : null}
+              style={filter === "all" ? { backgroundColor: "#555", color: "white" } : null}
             >
               All {filter === "all" ? "(" + totalTodos + ")" : ""}
             </ToggleButton>
             <ToggleButton
               id="listItem"
               value="pending"
-              style={filter === "pending" ? { backgroundColor: "rgb(85, 85, 85)", color: "white" } : null}
+              style={filter === "pending" ? { backgroundColor: "#555", color: "white" } : null}
             >
               Pending {filter === "pending" ? "(" + totalTodos + ")" : ""}
             </ToggleButton>
             <ToggleButton
               id="listItem"
               value="complete"
-              style={filter === "complete" ? { backgroundColor: "rgb(85, 85, 85)", color: "white" } : null}
+              style={filter === "complete" ? { backgroundColor: "#555", color: "white" } : null}
             >
               Complete {filter === "complete" ? "(" + totalTodos + ")" : ""}
             </ToggleButton>
