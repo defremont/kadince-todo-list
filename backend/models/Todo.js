@@ -4,6 +4,7 @@ const todoSchema = mongoose.Schema(
     {
         task: { type: String, required: true },
         isCompleted: { type: Boolean, default: false },
+        completedAt: { type: Date },
         dueDate: { type: Date },
         priority: { type: Number, enum: [0, 1, 2], default: 2 },
         description: { type: String },

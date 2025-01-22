@@ -10,6 +10,7 @@ router.get("/", async (req, res) => {
         const skip = (page - 1) * limit;
         const sortBy = req.query.sortBy || "createdAt";
         const filter = req.query.filter || "all";
+        const searchString = req.query.searchString || "";
 
         // Build the filter condition
         const todoQueryFilter = filter === "all"
@@ -19,7 +20,7 @@ router.get("/", async (req, res) => {
         // Build the aggregation pipeline
         const aggregationPipeline = [
             // Match stage for filtering
-            { $match: todoQueryFilter },
+            { $match: {...todoQueryFilter, task: { $regex: searchString, $options: 'i' }} },
         ];
 
         // Add sorting logic based on sortBy parameter
@@ -75,7 +76,7 @@ router.get("/", async (req, res) => {
 
         // Get total count for pagination
         const countPipeline = [
-            { $match: todoQueryFilter },
+            { $match: {...todoQueryFilter, task: { $regex: searchString, $options: 'i' }} },
             { $count: 'total' }
         ];
         const countResult = await Todo.aggregate(countPipeline);
@@ -98,6 +99,7 @@ router.post("/", async (req, res) => {
     const todo = await Todo.create({
         task: req.body.task,
         dueDate: req.body.dueDate,
+        completedAt: req.body.completedAt,
         priority: req.body.priority,
         description: req.body.description,
     });
@@ -108,7 +110,7 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
     const todo = await Todo.findByIdAndUpdate(
         req.params.id,
-        { dueDate: req.body.dueDate, task: req.body.task, isCompleted: req.body.isCompleted, description: req.body.description, priority: req.body.priority },
+        { dueDate: req.body.dueDate, completedAt: req.body.completedAt, task: req.body.task, isCompleted: req.body.isCompleted, description: req.body.description, priority: req.body.priority },
     );
     res.json(todo);
 });

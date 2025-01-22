@@ -8,8 +8,6 @@ import {
     Chip,
     Box,
     Typography,
-    Backdrop,
-    CircularProgress,
     DialogTitle,
     DialogContent,
     Checkbox,
@@ -17,8 +15,7 @@ import {
 import TodoForm from "./TodoForm";
 import CloseIcon from '@mui/icons-material/Close';
 import todoService from "../services/todoService";
-
-const TodoList = ({ todos, fetchTodos, setLoading, loading }) => {
+const TodoList = ({ todos, fetchTodos }) => {
     const [editTodo, setEditTodo] = useState({
         task: "",
         priority: 0,
@@ -30,12 +27,12 @@ const TodoList = ({ todos, fetchTodos, setLoading, loading }) => {
     const priorityColors = ["error", "warning", "success"]; // MUI color variants for priority
 
     const toggleComplete = async (todo) => {
-        setLoading(true);
         await todoService.updateTodo(todo._id, {
+            completedAt: Date.now(),
             isCompleted: !todo.isCompleted,
         });
+
         fetchTodos();
-        setLoading(false);
     };
 
     const startEditing = (todo) => {
@@ -56,12 +53,6 @@ const TodoList = ({ todos, fetchTodos, setLoading, loading }) => {
 
     return (
         <>
-            <Backdrop
-                open={loading}
-                style={{ zIndex: 1000, color: "#fff" }}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
             <List className="list-container">
                 {todos.map((todo) => (
                     <Box display="flex" gap={1} key={todo._id}
@@ -117,11 +108,16 @@ const TodoList = ({ todos, fetchTodos, setLoading, loading }) => {
                                             }}
                                         >
                                             {todo.isCompleted
-                                                ? <Chip
-                                                    label="Done"
-                                                    style={{ backgroundColor: '#00AA9e', marginRight: "10px" }}
-                                                    size="small"
-                                                />
+                                                ?
+                                                <div>
+                                                    <Chip
+                                                        label="Done"
+                                                        style={{ backgroundColor: '#00AA9e', marginRight: "10px" }}
+                                                        size="small"
+                                                    />
+                                                    {new Date(todo.completedAt).toLocaleDateString()}
+                                                </div>
+
                                                 : ""}{todo.dueDate
                                                     ? new Date(todo.dueDate).toLocaleDateString()
                                                     : ""}
@@ -157,8 +153,6 @@ const TodoList = ({ todos, fetchTodos, setLoading, loading }) => {
                 <DialogContent dividers>
                     <TodoForm
                         fetchTodos={fetchTodos}
-                        loading={loading}
-                        setLoading={setLoading}
                         initialValues={editTodo}
                         onClose={closeEditDialog}
                     />

@@ -16,6 +16,7 @@ import {
   DialogTitle,
   Grid,
   Link,
+  TextField,
 } from "@mui/material";
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
@@ -42,17 +43,15 @@ const App = () => {
   const [totalTodos, setTotalTodos] = useState(0);
   const [limit, setLimit] = useState(10);
   const [sortBy, setSortBy] = useState("createdAt");
-  const [loading, setLoading] = useState(false);
   const [newTodoDialog, setNewTodoDialog] = useState(false);
+  const [searchString, setSearchString] = useState("");
 
   const fetchTodos = useCallback(async () => {
-    setLoading(true);
-    const { data } = await todoService.getTodos(page, limit, sortBy, filter);
+    const { data } = await todoService.getTodos(searchString, page, limit, sortBy, filter);
     setTodos(data.todos);
     setTotalPages(data.totalPages);
     setTotalTodos(data.total);
-    setLoading(false);
-  }, [page, limit, sortBy, filter]);
+  }, [page, limit, sortBy, filter, searchString]);
 
   useEffect(() => {
     fetchTodos();
@@ -101,7 +100,14 @@ const App = () => {
           {/* Calendar Section */}
           <Typography variant="h5" align="center" gutterBottom>
             {formatDate(new Date())}
-          </Typography>
+          </Typography>     
+          <TextField
+              label="Search Tasks"
+              variant="outlined"
+              fullWidth
+              value={searchString}
+              onChange={(e) => setSearchString(e.target.value)}
+          />
           {/* Filter */}
           <ToggleButtonGroup
             value={filter}
@@ -195,8 +201,6 @@ const App = () => {
           <TodoList
             todos={todos}
             fetchTodos={fetchTodos}
-            setLoading={setLoading}
-            loading={loading}
           />
         </Box>
       </Container>
@@ -236,8 +240,6 @@ const App = () => {
         <DialogContent dividers>
           <TodoForm
             fetchTodos={fetchTodos}
-            loading={loading}
-            setLoading={setLoading}
             onClose={closeTodoDialog}
           />
         </DialogContent>

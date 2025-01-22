@@ -17,16 +17,18 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import DeleteIcon from "@mui/icons-material/Delete";
 import todoService from "../services/todoService";
 
-const TodoForm = ({ fetchTodos, loading, setLoading, initialValues, onClose }) => {
+const TodoForm = ({ fetchTodos, initialValues, onClose }) => {
     const [task, setTask] = useState(initialValues?.task || "");
     const [dueDate, setDueDate] = useState(initialValues?.dueDate || null);
     const [priority, setPriority] = useState(initialValues?.priority || 1);
     const [isCompleted, setIsCompleted] = useState(initialValues?.isCompleted || false);
+    const [completedAt, setCompletedAt] = useState(initialValues?.dueDate || null);
 
     useEffect(() => {
         if (initialValues) {
             setTask(initialValues.task || "");
             setDueDate(initialValues.dueDate ? new Date(initialValues.dueDate) : null);
+            setCompletedAt(initialValues.completedAt ? new Date(initialValues.completedAt) : null);
             setPriority(initialValues.priority);
             setIsCompleted(initialValues.isCompleted || false);
         }
@@ -35,13 +37,13 @@ const TodoForm = ({ fetchTodos, loading, setLoading, initialValues, onClose }) =
     const handleSubmit = async (e) => {
         e.preventDefault();
         onClose();
-        setLoading(true);
         try {
             if (initialValues && initialValues._id) {
                 // Update existing task                
                 await todoService.updateTodo(initialValues._id, {
                     task,
                     dueDate,
+                    completedAt,
                     priority,
                     isCompleted
                 });
@@ -50,6 +52,7 @@ const TodoForm = ({ fetchTodos, loading, setLoading, initialValues, onClose }) =
                 await todoService.createTodo({
                     task,
                     dueDate,
+                    completedAt,
                     priority,
                     isCompleted
                 });
@@ -57,17 +60,13 @@ const TodoForm = ({ fetchTodos, loading, setLoading, initialValues, onClose }) =
             fetchTodos();
         } catch (error) {
             console.error("Error saving task:", error);
-        } finally {
-            setLoading(false);
         }
     };
 
     const deleteTodo = async (id) => {
-        setLoading(true);
         onClose();
         await todoService.deleteTodo(id);
         fetchTodos();
-        setLoading(false);
     };
     const handlePriorityChange = (event) => setPriority(event.target.value);
 
@@ -103,6 +102,14 @@ const TodoForm = ({ fetchTodos, loading, setLoading, initialValues, onClose }) =
                         onChange={(newValue) => setDueDate(newValue)}
                         renderInput={(params) => <TextField {...params} />}
                     />
+                </LocalizationProvider>                
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                        label="Completed At"
+                        value={completedAt}
+                        onChange={(newValue) => setCompletedAt(newValue)}
+                        renderInput={(params) => <TextField {...params} />}
+                    />
                 </LocalizationProvider>
             </Box>
             <Box display="flex"
@@ -116,13 +123,17 @@ const TodoForm = ({ fetchTodos, loading, setLoading, initialValues, onClose }) =
                         onChange={() => setIsCompleted(!isCompleted)}
                     />} label="Done" />
                 </FormGroup>
+                
+            { initialValues ?
                 <IconButton onClick={() => deleteTodo(initialValues._id)}>
                     <DeleteIcon color="error" />
-                </IconButton>
+                </IconButton> : ""
+            }
             </Box>
-            <Button variant="contained" color="primary" type="submit" disabled={loading}>
+            <Button variant="contained" color="primary" type="submit">
                 {initialValues ? "Update" : "Save"}
             </Button>
+            
         </Box>
     );
 };

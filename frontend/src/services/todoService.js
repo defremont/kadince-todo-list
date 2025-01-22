@@ -3,9 +3,9 @@ import axios from "axios";
 const API_URL = process.env.REACT_APP_API_URL + "/api/todos";
 
 const todoService = {
-    getTodos: async (page, limit, sortBy, filter) => {
+    getTodos: async (searchString, page, limit, sortBy, filter) => {
         const response = await axios.get(API_URL, {
-            params: { page, limit, sortBy, filter },
+            params: { searchString, page, limit, sortBy, filter },
         });
         return response;
     },
